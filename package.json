@@ -1,0 +1,13 @@
+{
+  "name": "returnride-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ReturnRide (Return Ride Token) landing page. Zero-dependency static site.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/helpers.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReturnRide: start a shared ride home with classmates</title>
+  <meta name="description" content="A token-based return-ride system where students join pre-created rides and the ride activates automatically when enough passengers sign up.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://returnride.app/">
+
+  <!-- Open Graph / social. PLACEHOLDER: add /og-image.png (1200x630) before launch. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ReturnRide">
+  <meta property="og:title" content="ReturnRide: don't wait for a shared ride. Start one.">
+  <meta property="og:description" content="Post your return trip, let classmates tap to join, and your ride confirms itself when enough seats fill.">
+  <meta property="og:url" content="https://returnride.app/">
+  <meta property="og:image" content="https://returnride.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000'/%3E%3Cpath d='M9 16h13m-4.5-4.5L22 16l-4.5 4.5' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="application/ld+json" id="orgSchema">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ReturnRide",
+    "url": "https://returnride.app/",
+    "description": "A token-based return-ride system where students join pre-created rides and the ride activates automatically when enough passengers sign up.",
+    "email": "hello@returnride.app"
+  }
+  </script>
+
+  <!--
+    ANALYTICS PLACEHOLDER (disabled by default)
+    Enable in config.js -> analytics.enabled = true and set provider + siteId.
+    script.js then injects Plausible or Fathom. Nothing loads while disabled.
+  -->
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- 1. Navigation -->
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#top" class="wordmark js-brand">ReturnRide</a>
+
+      <nav class="nav-menu" id="navMenu" aria-label="Main">
+        <ul class="nav-links">
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#pitch-deck">Pitch deck</a></li>
+          <li><a href="#safety">Safety</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch color theme" title="Toggle theme">
+            <svg class="sun-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg class="moon-icon" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+          <a href="#join" class="btn btn-primary btn-sm">Join the pilot</a>
+        </div>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        <span class="visually-hidden">Menu</span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- 2. Hero -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title" class="hero-title">Don't wait for a shared ride. Start one.</h1>
+          <p class="hero-sub">Post your return trip, let classmates tap to join, and your ride confirms itself when enough seats fill. The fare splits automatically.</p>
+
+          <!-- Uber-style Token Booking Widget -->
+          <div class="uber-widget">
+            <div class="widget-tabs" role="tablist" aria-label="Ride type">
+              <button type="button" class="widget-tab is-active" id="widgetTabJoin" role="tab" aria-selected="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 3c-.1.3-.1.6-.1.8v4.3c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                <span>Join a ride</span>
+              </button>
+              <button type="button" class="widget-tab" id="widgetTabOffer" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><circle cx="12" cy="12" r="3"/><path d="M12 2v7M12 15v7M2 12h7M15 12h7"/></svg>
+                <span>Offer seats</span>
+              </button>
+            </div>
+
+            <!-- Route Connector inputs (circle to square) -->
+            <div class="route-connector">
+              <div class="connector-track" aria-hidden="true">
+                <span class="connector-node origin"></span>
+                <span class="connector-line"></span>
+                <span class="connector-node destination"></span>
+              </div>
+              <div class="connector-inputs">
+                <div class="connector-row">
+                  <label for="pickupLocation" class="connector-label">Pickup</label>
+                  <input type="text" id="pickupLocation" class="connector-field" value="Campus Gate 2 (Hostels)" readonly>
+                </div>
+                <div class="connector-divider" aria-hidden="true"></div>
+                <div class="connector-row">
+                  <label for="dropLocation" class="connector-label">Destination</label>
+                  <input type="text" id="dropLocation" class="connector-field" value="Central Railway Station" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schedule & capacity pill row -->
+            <div class="widget-pill-row">
+              <div class="widget-pill">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Sun, 5:30 pm</span>
+              </div>
+              <div class="widget-pill">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>4 seats target</span>
+              </div>
+            </div>
+
+            <!-- Early Access Pilot Form inside widget -->
+            <form class="hero-form js-lead-form" data-source="hero" novalidate>
+              <div class="field">
+                <label for="hero-email" class="label">College email address</label>
+                <div class="inline-field">
+                  <input type="email" id="hero-email" name="email" class="input" placeholder="you@college.edu" autocomplete="email" required aria-describedby="hero-email-error">
+                  <button type="submit" class="btn btn-primary">Get early access</button>
+                </div>
+                <p class="field-error" id="hero-email-error"></p>
+              </div>
+              <div class="hp" aria-hidden="true">
+                <label for="hero-website">Leave this empty</label>
+                <input type="text" id="hero-website" name="website" tabindex="-1" autocomplete="off">
+              </div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </div>
+
+          <div class="btn-row" style="margin-top: 24px;">
+            <a href="#join" class="btn btn-primary">Join the pilot</a>
+            <a href="#how-it-works" class="btn btn-secondary">See how it works</a>
+          </div>
+
+          <!-- Trust pillars bar -->
+          <div class="hero-trust-bar">
+            <span class="trust-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Verified campus email
+            </span>
+            <span class="trust-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Auto-activation
+            </span>
+            <span class="trust-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Zero coordination
+            </span>
+          </div>
+
+          <p class="hero-trust">Built by students, for students.</p>
+        </div>
+
+        <!-- Interactive phone demo -->
+        <figure class="hero-demo" aria-labelledby="demo-caption">
+          <figcaption id="demo-caption" class="visually-hidden">Interactive example of a Return Ride Token. Press Join My Ride to see the ride confirm.</figcaption>
+          <div class="phone">
+            <div class="phone-notch" aria-hidden="true"></div>
+            <div class="phone-screen">
+              <!-- iOS Style Status Bar -->
+              <div class="phone-status-bar" aria-hidden="true">
+                <span class="phone-time">9:41</span>
+                <div class="phone-status-icons">
+                  <svg width="14" height="10" viewBox="0 0 24 16" fill="currentColor"><rect x="0" y="8" width="4" height="8" rx="1"/><rect x="6" y="5" width="4" height="11" rx="1"/><rect x="12" y="2" width="4" height="14" rx="1"/><rect x="18" y="0" width="4" height="16" rx="1"/></svg>
+                  <svg width="16" height="11" viewBox="0 0 24 14" fill="currentColor"><path d="M1 4a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3V4zm19 2h1.5a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5H20V6z"/></svg>
+                </div>
+              </div>
+
+              <!-- Route Preset Switcher Tabs -->
+              <div class="mockup-route-tabs" role="tablist" aria-label="Demo route samples">
+                <button type="button" class="route-tab is-active" id="routeTabStation" role="tab" aria-selected="true">Station (4 seats)</button>
+                <button type="button" class="route-tab" id="routeTabAirport" role="tab" aria-selected="false">Airport (3 seats)</button>
+              </div>
+
+              <!-- Stylized Vector Map Preview -->
+              <div class="mockup-map" aria-hidden="true">
+                <svg class="map-svg" viewBox="0 0 300 90" fill="none" preserveAspectRatio="none">
+                  <path d="M-10 25h320M-10 65h320M70 -10v110M230 -10v110" stroke="currentColor" stroke-opacity="0.12" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <path class="map-route-line" d="M 40 65 Q 110 65 140 40 T 260 25" stroke="var(--brand)" stroke-width="3.5" stroke-linecap="round"/>
+                  <circle cx="40" cy="65" r="8" fill="var(--brand)" fill-opacity="0.25"/>
+                  <circle cx="40" cy="65" r="4" fill="var(--brand)"/>
+                  <circle cx="260" cy="25" r="6" fill="var(--ink)"/>
+                  <circle cx="260" cy="25" r="2.5" fill="var(--paper)"/>
+                </svg>
+                <div class="map-badge">
+                  <span class="map-badge-dot"></span>
+                  <span id="demoMapEta">Campus Gate 2 &rarr; Station (22 min)</span>
+                </div>
+              </div>
+
+              <div class="app-bar">
+                <span class="app-brand js-brand">ReturnRide</span>
+                <span class="status-badge" id="demoBadge">2 seats left</span>
+              </div>
+
+              <div class="ride-card" id="demoCard">
+                <div class="ride-meta">
+                  <div>
+                    <span class="meta-label">Going to</span>
+                    <span class="meta-value" id="demoDestination">Central railway station</span>
+                  </div>
+                  <div>
+                    <span class="meta-label">Leaves</span>
+                    <span class="meta-value" id="demoDeparture">Sun, 5:30 pm</span>
+                  </div>
+                </div>
+
+                <div class="seats">
+                  <div class="seats-head">
+                    <span>Seats filled</span>
+                    <span class="seats-count" id="demoCount">2 of 4</span>
+                  </div>
+                  <div class="progress" id="demoProgress" role="progressbar" aria-label="Seats filled" aria-valuemin="0" aria-valuemax="4" aria-valuenow="2">
+                    <div class="progress-fill" id="demoFill"></div>
+                  </div>
+                  <ul class="seat-chips" id="demoSeats" aria-label="Passengers"></ul>
+                </div>
+
+                <div class="fare-row">
+                  <span class="meta-label">Your share if it fills</span>
+                  <span class="fare-value" id="demoShare">₹150</span>
+                </div>
+
+                <button type="button" class="btn btn-brand btn-block" id="demoJoin">Join My Ride</button>
+                <p class="demo-hint" id="demoHint">Try it: tap Join My Ride.</p>
+              </div>
+
+              <div class="confirmed" id="demoConfirmed" hidden>
+                <div class="confirmed-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </div>
+                <p class="confirmed-title">Ride confirmed</p>
+                <p class="confirmed-text" id="demoConfirmedText">All 4 seats filled. Your ride is on.</p>
+                <div class="split-box">
+                  <span class="meta-label">Your share</span>
+                  <span class="split-value" id="demoSplit">₹150</span>
+                  <span class="split-note" id="demoSplitNote">₹600 fare split between 4 passengers</span>
+                </div>
+                <p class="demo-hint">Resetting in <span id="demoTimer">4</span>s</p>
+              </div>
+              <div class="phone-home-indicator" aria-hidden="true"></div>
+            </div>
+          </div>
+          <p class="visually-hidden" id="demoLive" aria-live="polite"></p>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Uber-Style Suggestions Tray -->
+    <section class="section suggestions-section" aria-labelledby="suggestions-title">
+      <div class="container">
+        <h2 id="suggestions-title" class="section-title">Suggestions</h2>
+        <div class="suggestions-grid">
+          <div class="suggestion-card">
+            <div class="suggestion-body">
+              <h3 class="suggestion-title">Station Express</h3>
+              <p class="suggestion-desc">Catch scheduled peer rides to railway terminals before Sunday departures.</p>
+              <a href="#how-it-works" class="suggestion-link">Details <span aria-hidden="true">&rarr;</span></a>
+            </div>
+            <div class="suggestion-icon-wrap" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16M12 3v8M8 19l-2 3M16 19l2 3"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/></svg>
+            </div>
+          </div>
+
+          <div class="suggestion-card">
+            <div class="suggestion-body">
+              <h3 class="suggestion-title">Airport Split</h3>
+              <p class="suggestion-desc">Split expensive cab fares to the airport terminal during holiday rush.</p>
+              <a href="#how-it-works" class="suggestion-link">Details <span aria-hidden="true">&rarr;</span></a>
+            </div>
+            <div class="suggestion-icon-wrap" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+            </div>
+          </div>
+
+          <div class="suggestion-card">
+            <div class="suggestion-body">
+              <h3 class="suggestion-title">Bus Stand Shuttle</h3>
+              <p class="suggestion-desc">Quick return rides to intercity bus terminals on Friday evenings.</p>
+              <a href="#how-it-works" class="suggestion-link">Details <span aria-hidden="true">&rarr;</span></a>
+            </div>
+            <div class="suggestion-icon-wrap" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 11h18M6 18v2M18 18v2"/><circle cx="7" cy="15" r="1"/><circle cx="17" cy="15" r="1"/></svg>
+            </div>
+          </div>
+
+          <div class="suggestion-card">
+            <div class="suggestion-body">
+              <h3 class="suggestion-title">Offer Spare Seats</h3>
+              <p class="suggestion-desc">Already booked a cab or have a car? Post spare seats and split the bill.</p>
+              <a href="#join" class="suggestion-link">Join pilot <span aria-hidden="true">&rarr;</span></a>
+            </div>
+            <div class="suggestion-icon-wrap" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. The problem -->
+    <section class="section problem" id="about" aria-labelledby="problem-title">
+      <div class="container">
+        <h2 id="problem-title" class="statement">You know when you're going back. You just can't find enough people to go with you.</h2>
+        <ul class="pains">
+          <li>Group chats go quiet</li>
+          <li>Fares are awkward to split</li>
+          <li>You don't know if the ride will happen until the last minute</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4. How it works -->
+    <section class="section section-alt" id="how-it-works" aria-labelledby="how-title">
+      <div class="container">
+        <h2 id="how-title" class="section-title">A confirmed ride in six steps.</h2>
+
+        <div class="how-grid">
+          <ol class="steps" id="steps">
+            <li class="step is-active" data-step="1">
+              <span class="step-num" aria-hidden="true">1</span>
+              <div class="step-body">
+                <h3 class="step-title">Create token</h3>
+                <p>Enter destination, departure time and available seats.</p>
+                <div class="step-screen" aria-hidden="true"></div>
+              </div>
+            </li>
+            <li class="step" data-step="2">
+              <span class="step-num" aria-hidden="true">2</span>
+              <div class="step-body">
+                <h3 class="step-title">Share token</h3>
+                <p>Nearby or eligible students can view the ride.</p>
+                <div class="step-screen" aria-hidden="true"></div>
+              </div>
+            </li>
+            <li class="step" data-step="3">
+              <span class="step-num" aria-hidden="true">3</span>
+              <div class="step-body">
+                <h3 class="step-title">Tap Join</h3>
+                <p>Interested passengers reserve a seat with one tap on Join My Ride.</p>
+                <div class="step-screen" aria-hidden="true"></div>
+              </div>
+            </li>
+            <li class="step" data-step="4">
+              <span class="step-num" aria-hidden="true">4</span>
+              <div class="step-body">
+                <h3 class="step-title">Auto-activate</h3>
+                <p>The ride is confirmed when the required count is reached.</p>
+                <div class="step-screen" aria-hidden="true"></div>
+              </div>
+            </li>
+            <li class="step" data-step="5">
+              <span class="step-num" aria-hidden="true">5</span>
+              <div class="step-body">
+                <h3 class="step-title">Fare split</h3>
+                <p>The agreed fare is divided among confirmed passengers.</p>
+                <div class="step-screen" aria-hidden="true"></div>
+              </div>
+            </li>
+            <li class="step" data-step="6">
+              <span class="step-num" aria-hidden="true">6</span>
+              <div class="step-body">
+                <h3 class="step-title">Cancel if needed</h3>
+                <p>Cancel token before activation if the ride does not form.</p>
+                <div class="step-screen" aria-hidden="true"></div>
+              </div>
+            </li>
+          </ol>
+
+          <div class="how-phone" aria-hidden="true">
+            <div class="phone">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="app-bar">
+                  <span class="app-brand js-brand">ReturnRide</span>
+                  <span class="step-pill" id="stepPill">Step 1 of 6</span>
+                </div>
+                <div class="screen-stage" id="stepStage"></div>
+                <div class="phone-home-indicator" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Why it's different -->
+    <section class="section" aria-labelledby="diff-title">
+      <div class="container">
+        <h2 id="diff-title" class="section-title">Passengers build the ride together.</h2>
+        <div class="compare">
+          <div class="card compare-card">
+            <span class="compare-eyebrow">The old way</span>
+            <h3 class="card-title">Typical ride sharing</h3>
+            <ul class="compare-list">
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg>Wait for a ride that already exists</li>
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg>Chase people in group chats</li>
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg>Work out fares by hand</li>
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 12h12"/></svg>No idea if anyone is coming</li>
+            </ul>
+          </div>
+          <div class="card compare-card compare-card-dark">
+            <span class="compare-eyebrow compare-eyebrow-brand">Return Ride Token</span>
+            <h3 class="card-title js-product">Return Ride Token</h3>
+            <ul class="compare-list">
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Passengers create the ride themselves</li>
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>One-tap joining</li>
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Fare divided automatically</li>
+              <li><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Ride confirms the moment seats fill</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Features -->
+    <section class="section section-alt" aria-labelledby="features-title">
+      <div class="container">
+        <h2 id="features-title" class="visually-hidden">Features</h2>
+        <ul class="grid-4">
+          <li class="card feature">
+            <span class="feature-num" aria-hidden="true">01</span>
+            <svg class="icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>
+            <h3 class="card-title">Passenger-led</h3>
+            <p>Any student can start a ride instead of waiting for one to appear.</p>
+          </li>
+          <li class="card feature">
+            <span class="feature-num" aria-hidden="true">02</span>
+            <svg class="icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.5 2.5L16 9.5"/></svg>
+            <h3 class="card-title">Auto activation</h3>
+            <p>The ride confirms itself the moment the required seats fill.</p>
+          </li>
+          <li class="card feature">
+            <span class="feature-num" aria-hidden="true">03</span>
+            <svg class="icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M12 6v12"/><circle cx="7.5" cy="12" r="1"/><circle cx="16.5" cy="12" r="1"/></svg>
+            <h3 class="card-title">Fair fares</h3>
+            <p>The agreed fare is divided evenly among confirmed passengers.</p>
+          </li>
+          <li class="card feature">
+            <span class="feature-num" aria-hidden="true">04</span>
+            <svg class="icon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9.5 2.5h5"/></svg>
+            <h3 class="card-title">Less waiting</h3>
+            <p>Know who is going and when, without chasing replies in group chats.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 7. Fare split calculator -->
+    <section class="section" aria-labelledby="calc-title">
+      <div class="container">
+        <div class="calc">
+          <div class="calc-copy">
+            <h2 id="calc-title" class="section-title">See what your ride costs.</h2>
+            <p>Change the fare or the number of seats to see each person's share.</p>
+            <!-- Route Presets -->
+            <div class="calc-presets">
+              <span class="presets-label">Popular routes:</span>
+              <div class="preset-buttons">
+                <button type="button" class="preset-btn is-active" data-fare="600" data-seats="4">Station ₹600</button>
+                <button type="button" class="preset-btn" data-fare="350" data-seats="4">Bus Stand ₹350</button>
+                <button type="button" class="preset-btn" data-fare="1200" data-seats="3">Airport ₹1,200</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card calc-card">
+            <div class="calc-inputs">
+              <div class="field">
+                <label for="calcFare" class="label">Total fare (<span class="js-currency-symbol">₹</span>)</label>
+                <input type="number" id="calcFare" class="input" inputmode="decimal" min="1" step="1" value="600" aria-describedby="calcFareError">
+                <p class="field-error" id="calcFareError"></p>
+              </div>
+              <div class="field">
+                <div class="label-row">
+                  <label for="calcSeats" class="label">Seats needed</label>
+                  <output for="calcSeats" class="seat-output" id="calcSeatsOut">4 people</output>
+                </div>
+                <input type="range" id="calcSeats" class="range" min="2" max="5" step="1" value="4">
+                <div class="range-ticks" aria-hidden="true"><span>2</span><span>3</span><span>4</span><span>5</span></div>
+              </div>
+            </div>
+
+            <div class="calc-result">
+              <span class="meta-label">Each person pays</span>
+              <output class="calc-amount" id="calcResult" for="calcFare calcSeats" aria-live="polite">₹150</output>
+              <div class="calc-visual-seats" id="calcVisualSeats" aria-label="Seat breakdown visualization"></div>
+              <p class="calc-note">Estimates only. Final fare is agreed in the token.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Safety -->
+    <section class="section section-alt" id="safety" aria-labelledby="safety-title">
+      <div class="container">
+        <h2 id="safety-title" class="section-title">Built for people who share a ride.</h2>
+        <ul class="grid-4">
+          <li class="card safety">
+            <span class="tag">Planned for pilot</span>
+            <h3 class="card-title">College email verification</h3>
+            <p>Only students with a college email address can create or join a token.</p>
+          </li>
+          <li class="card safety">
+            <span class="tag">Planned for pilot</span>
+            <h3 class="card-title">Ride code shown to the driver</h3>
+            <p>Each confirmed ride gets a code the driver checks before anyone gets in.</p>
+          </li>
+          <li class="card safety">
+            <span class="tag">Planned for pilot</span>
+            <h3 class="card-title">Report a rider</h3>
+            <p>Flag a rider if something felt wrong, and we'll review it.</p>
+          </li>
+          <li class="card safety">
+            <span class="tag">Planned for pilot</span>
+            <h3 class="card-title">Emergency contact option</h3>
+            <p>Share your ride details with someone you trust before you leave.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. Who it's for -->
+    <section class="section" aria-labelledby="audience-title">
+      <div class="container">
+        <h2 id="audience-title" class="visually-hidden">Who it's for</h2>
+        <div class="grid-2">
+          <div class="card audience">
+            <h3 class="audience-title">Students heading home</h3>
+            <p>Find classmates leaving for the same station, bus stand or town at the same time.</p>
+            <a href="#join" class="text-link">Join the pilot <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="card audience">
+            <h3 class="audience-title">Students with a car or booked cab and spare seats</h3>
+            <p>Post your trip, fill your empty seats and share the cost.</p>
+            <a href="#join" class="text-link">Join the pilot <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Pitch Deck -->
+    <section class="section deck-section" id="pitch-deck" aria-labelledby="deck-title">
+      <div class="container">
+        <div class="deck-header">
+          <div class="deck-header-info">
+            <span class="tag deck-badge">Pitch Deck • 10 Slides</span>
+            <h2 id="deck-title" class="section-title">Smart Student Mobility</h2>
+            <p class="deck-lead">The strategy, market validation, ride-formation flow, and pilot roadmap behind Return Ride Token.</p>
+          </div>
+          <div class="deck-view-toggles" role="group" aria-label="Deck display mode">
+            <button type="button" class="deck-mode-btn is-active" id="deckModeSlide" aria-pressed="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="12" x="3" y="4" rx="2"/><path d="M2 20h20M12 16v4"/></svg>
+              <span>Slide view</span>
+            </button>
+            <button type="button" class="deck-mode-btn" id="deckModeGrid" aria-pressed="false">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+              <span>All 10 slides</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Slide Category Tabs -->
+        <div class="deck-nav-wrapper">
+          <div class="deck-tabs" role="tablist" aria-label="Pitch deck slides">
+            <button type="button" role="tab" class="deck-tab is-active" id="deckTab1" aria-selected="true" data-slide="1"><span class="tab-idx">00</span> Cover</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab2" aria-selected="false" data-slide="2"><span class="tab-idx">01</span> Opportunity</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab3" aria-selected="false" data-slide="3"><span class="tab-idx">02</span> Who It Serves</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab4" aria-selected="false" data-slide="4"><span class="tab-idx">03</span> Solution</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab5" aria-selected="false" data-slide="5"><span class="tab-idx">04</span> Experience</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab6" aria-selected="false" data-slide="6"><span class="tab-idx">05</span> Why This Approach</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab7" aria-selected="false" data-slide="7"><span class="tab-idx">06</span> Prove The Need</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab8" aria-selected="false" data-slide="8"><span class="tab-idx">07</span> Sustainable Growth</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab9" aria-selected="false" data-slide="9"><span class="tab-idx">08</span> Execution Plan</button>
+            <button type="button" role="tab" class="deck-tab" id="deckTab10" aria-selected="false" data-slide="10"><span class="tab-idx">09</span> The Vision</button>
+          </div>
+        </div>
+
+        <!-- Interactive Slide Canvas Container -->
+        <div class="deck-stage" id="deckStage">
+          <!-- Slide Action Bar (Top of Slide) -->
+          <div class="deck-action-bar">
+            <div class="deck-counter">
+              <span id="deckSlideNum">Slide 1 of 10</span>
+              <div class="deck-progress-bar"><div class="deck-progress-fill" id="deckProgressFill" style="width: 10%"></div></div>
+            </div>
+            <div class="deck-controls">
+              <button type="button" class="deck-arrow-btn" id="deckPrevBtn" aria-label="Previous slide" disabled>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                <span>Prev</span>
+              </button>
+              <button type="button" class="deck-arrow-btn" id="deckNextBtn" aria-label="Next slide">
+                <span>Next</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Slide 1: Cover -->
+          <div class="deck-slide is-active" id="slide-1" data-index="1" role="tabpanel" aria-labelledby="deckTab1">
+            <div class="slide-content slide-cover">
+              <div class="slide-top-meta">
+                <span class="slide-meta-pill">Pitch Deck • 2026</span>
+                <span class="slide-meta-brand js-brand">ReturnRide</span>
+              </div>
+              <div class="slide-hero-center">
+                <span class="slide-kicker">SMART STUDENT MOBILITY</span>
+                <h3 class="slide-main-title">RETURN RIDE TOKEN</h3>
+                <p class="slide-sub-title">A smarter way to fill empty seats and make the journey home easier.</p>
+                
+                <div class="slide-pillars-strip">
+                  <div class="pillar-box"><span class="pillar-action">SAVE</span><span class="pillar-desc">on travel</span></div>
+                  <div class="pillar-sep">/</div>
+                  <div class="pillar-box"><span class="pillar-action">MATCH</span><span class="pillar-desc">by route</span></div>
+                  <div class="pillar-sep">/</div>
+                  <div class="pillar-box"><span class="pillar-action">TRAVEL</span><span class="pillar-desc">together</span></div>
+                </div>
+
+                <div class="slide-route-track">
+                  <span class="route-node">CAMPUS</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-node">CITY</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-node">HOME</span>
+                </div>
+              </div>
+              <div class="slide-footer-bar">
+                <span>One route. Shared seats. Better journeys.</span>
+                <span class="slide-badge-dark">Create. Join. Travel together.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2: 01 The Opportunity -->
+          <div class="deck-slide" id="slide-2" data-index="2" role="tabpanel" aria-labelledby="deckTab2">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">01 / OPPORTUNITY</span>
+                <span class="slide-meta-brand">The Problem</span>
+              </div>
+              <h3 class="slide-headline">The journey home shouldn't be the hardest part</h3>
+              <p class="slide-desc">Students often travel toward the same places—but coordinate separately.</p>
+
+              <div class="same-dest-banner">
+                <div class="dest-badge">SAME DESTINATION</div>
+                <div class="dest-pains">
+                  <span>Different chats</span>
+                  <span class="dot-sep">•</span>
+                  <span>Different timings</span>
+                  <span class="dot-sep">•</span>
+                  <span>Different costs</span>
+                </div>
+              </div>
+
+              <div class="gap-grid-4">
+                <div class="gap-card">
+                  <div class="gap-icon">₹</div>
+                  <h4>Expensive solo trips</h4>
+                  <p>One student may pay for a full cab or private ride alone.</p>
+                </div>
+                <div class="gap-card">
+                  <div class="gap-icon">⌕</div>
+                  <h4>Hard to find co-riders</h4>
+                  <p>Potential passengers are scattered across unorganized group chats.</p>
+                </div>
+                <div class="gap-card">
+                  <div class="gap-icon">◷</div>
+                  <h4>Timing mismatch</h4>
+                  <p>Plans change; seats are hard to coordinate at the last minute.</p>
+                </div>
+                <div class="gap-card">
+                  <div class="gap-icon">↔</div>
+                  <h4>Uncertain availability</h4>
+                  <p>Students don't know who has spare seats or who needs one.</p>
+                </div>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>A COORDINATION GAP</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3: 02 Who It Serves -->
+          <div class="deck-slide" id="slide-3" data-index="3" role="tabpanel" aria-labelledby="deckTab3">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">02 / AUDIENCE</span>
+                <span class="slide-meta-brand">Target Segments</span>
+              </div>
+              <h3 class="slide-headline">Start with students who share routes</h3>
+              <p class="slide-desc">A focused first market makes matching easier and trust-building more practical.</p>
+
+              <div class="segments-list-grid">
+                <div class="segment-card">
+                  <div class="segment-num">1</div>
+                  <div class="segment-body">
+                    <h4>College &amp; university students</h4>
+                    <p>Primary launch audience: planned trips home and back to campus.</p>
+                  </div>
+                </div>
+                <div class="segment-card">
+                  <div class="segment-num">2</div>
+                  <div class="segment-body">
+                    <h4>Hostel &amp; day scholars</h4>
+                    <p>Students returning to nearby towns, transit points, or railway junctions.</p>
+                  </div>
+                </div>
+                <div class="segment-card">
+                  <div class="segment-num">3</div>
+                  <div class="segment-body">
+                    <h4>Common-route travellers</h4>
+                    <p>People heading toward the same bus stand, railway terminal, or city airport.</p>
+                  </div>
+                </div>
+                <div class="segment-card">
+                  <div class="segment-num">4</div>
+                  <div class="segment-body">
+                    <h4>Budget-conscious riders</h4>
+                    <p>Students seeking a more affordable, shared, split-cost journey.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="focus-strip">
+                <span class="focus-label">INITIAL FOCUS</span>
+                <span class="focus-route">CAMPUS &rarr; NEARBY TOWNS &amp; TRANSIT HUBS</span>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>STUDENT TRAVEL</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 4: 03 The Solution -->
+          <div class="deck-slide" id="slide-4" data-index="4" role="tabpanel" aria-labelledby="deckTab4">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">03 / PRODUCT</span>
+                <span class="slide-meta-brand">The Solution</span>
+              </div>
+              <h3 class="slide-headline">Meet Return Ride Token</h3>
+              <p class="slide-desc">A simple digital flow for creating a ride and bringing eligible passengers together.</p>
+
+              <div class="solution-grid">
+                <div class="token-mini-demo">
+                  <div class="mini-card-head">
+                    <span class="token-chip">Create Ride Token</span>
+                    <span class="token-status-dot"></span>
+                  </div>
+                  <div class="token-field-row">
+                    <span class="token-label">DESTINATION</span>
+                    <strong class="token-val">Vizianagaram</strong>
+                  </div>
+                  <div class="token-field-row">
+                    <span class="token-label">DEPARTURE</span>
+                    <strong class="token-val">5:00 PM</strong>
+                  </div>
+                  <div class="token-field-row">
+                    <span class="token-label">AVAILABLE SEATS</span>
+                    <strong class="token-val">3 seats</strong>
+                  </div>
+                  <div class="token-action-btn">CREATE TOKEN</div>
+                  <p class="token-caption">Create a ride. Invite the right people. Coordinate in one place.</p>
+                </div>
+
+                <div class="solution-pillars">
+                  <div class="sol-step">
+                    <div class="sol-idx">01</div>
+                    <div>
+                      <h4>Set trip details</h4>
+                      <p>Destination, departure time and available seats.</p>
+                    </div>
+                  </div>
+                  <div class="sol-step">
+                    <div class="sol-idx">02</div>
+                    <div>
+                      <h4>Discover a match</h4>
+                      <p>Eligible students can find a ride by route.</p>
+                    </div>
+                  </div>
+                  <div class="sol-step">
+                    <div class="sol-idx">03</div>
+                    <div>
+                      <h4>Join in a tap</h4>
+                      <p>Passengers can express interest / reserve a seat.</p>
+                    </div>
+                  </div>
+                  <div class="sol-step">
+                    <div class="sol-idx">04</div>
+                    <div>
+                      <h4>Confirm the ride</h4>
+                      <p>The ride proceeds when the required count is met.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>DIGITAL RIDE FORMATION</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 5: 04 The Experience -->
+          <div class="deck-slide" id="slide-5" data-index="5" role="tabpanel" aria-labelledby="deckTab5">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">04 / FLOW</span>
+                <span class="slide-meta-brand">User Experience</span>
+              </div>
+              <h3 class="slide-headline">Four steps from "I need a ride" to "Let's go"</h3>
+              <p class="slide-desc">Designed to make ride discovery and coordination feel straightforward.</p>
+
+              <div class="experience-steps-track">
+                <div class="exp-card">
+                  <div class="exp-icon">+</div>
+                  <div class="exp-num">01</div>
+                  <h4>CREATE</h4>
+                  <p>Enter destination, departure time &amp; seats.</p>
+                </div>
+                <div class="exp-card">
+                  <div class="exp-icon">⌕</div>
+                  <div class="exp-num">02</div>
+                  <h4>DISCOVER</h4>
+                  <p>Browse rides that fit the route and timing.</p>
+                </div>
+                <div class="exp-card">
+                  <div class="exp-icon">↗</div>
+                  <div class="exp-num">03</div>
+                  <h4>JOIN</h4>
+                  <p>Choose a suitable ride and request a seat.</p>
+                </div>
+                <div class="exp-card is-confirmed-exp">
+                  <div class="exp-icon">✓</div>
+                  <div class="exp-num">04</div>
+                  <h4>CONFIRM</h4>
+                  <p>Ride status updates once the group is ready.</p>
+                </div>
+              </div>
+
+              <div class="experience-strip">
+                <span>LESS SEARCHING</span>
+                <span class="sep">•</span>
+                <span>CLEARER PLANS</span>
+                <span class="sep">•</span>
+                <span>MORE USEFUL SEATS</span>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>STREAMLINED JOURNEYS</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 6: 05 Why This Approach -->
+          <div class="deck-slide" id="slide-6" data-index="6" role="tabpanel" aria-labelledby="deckTab6">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">05 / DIFFERENTIATION</span>
+                <span class="slide-meta-brand">Why This Approach</span>
+              </div>
+              <h3 class="slide-headline">From scattered coordination to one shared flow</h3>
+              <p class="slide-desc">The value is not just finding a ride—it’s making the group easier to organise.</p>
+
+              <div class="deck-compare-grid">
+                <div class="deck-compare-col old-way">
+                  <div class="col-head">
+                    <span class="tag-status">CURRENT EXPERIENCE</span>
+                    <h4>Scattered Coordination</h4>
+                  </div>
+                  <ul class="col-list">
+                    <li><span class="mark-x">✕</span> Search separately across chats</li>
+                    <li><span class="mark-x">✕</span> Wait for someone else to organise</li>
+                    <li><span class="mark-x">✕</span> Unclear seat availability</li>
+                    <li><span class="mark-x">✕</span> Repeat the same trip details</li>
+                    <li><span class="mark-x">✕</span> Harder to compare suitable options</li>
+                  </ul>
+                </div>
+
+                <div class="deck-compare-col new-way">
+                  <div class="col-head">
+                    <span class="tag-status brand">RETURN RIDE TOKEN</span>
+                    <h4>One Shared Flow</h4>
+                  </div>
+                  <ul class="col-list">
+                    <li><span class="mark-check">✓</span> Create a ride from the passenger’s need</li>
+                    <li><span class="mark-check">✓</span> Make eligible rides discoverable</li>
+                    <li><span class="mark-check">✓</span> Show available seats and trip details</li>
+                    <li><span class="mark-check">✓</span> Keep join requests in one flow</li>
+                    <li><span class="mark-check">✓</span> Build around shared routes and timing</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="differentiator-takeaway">
+                <span>Designed for planned return journeys—not generic ride browsing.</span>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>PASSENGER-FIRST FORMATION</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 7: 06 Prove The Need -->
+          <div class="deck-slide" id="slide-7" data-index="7" role="tabpanel" aria-labelledby="deckTab7">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">06 / VALIDATION</span>
+                <span class="slide-meta-brand">Pilot Metrics</span>
+              </div>
+              <h3 class="slide-headline">Validate with a focused campus pilot</h3>
+              <p class="slide-desc">We will measure real behaviour before scaling—rather than relying on assumptions.</p>
+
+              <div class="metrics-grid-4">
+                <div class="metric-card">
+                  <span class="metric-key">ROUTE DEMAND</span>
+                  <strong class="metric-q">Which destinations repeat?</strong>
+                  <p>Map high-frequency departure patterns.</p>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-key">MATCH RATE</span>
+                  <strong class="metric-q">How many rides find riders?</strong>
+                  <p>Percentage of created tokens that fill 100%.</p>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-key">COST SAVING</span>
+                  <strong class="metric-q">Does sharing lower trip cost?</strong>
+                  <p>Measurable savings per individual student.</p>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-key">RELIABILITY</span>
+                  <strong class="metric-q">Do riders arrive as planned?</strong>
+                  <p>On-time completion without cancellations.</p>
+                </div>
+              </div>
+
+              <div class="pilot-loop-strip">
+                <span class="loop-title">PILOT LOOP:</span>
+                <div class="loop-step"><strong>1 LISTEN</strong> Survey students &amp; map common routes</div>
+                <span class="loop-arrow">&rarr;</span>
+                <div class="loop-step"><strong>2 TEST</strong> Run a small prototype with volunteers</div>
+                <span class="loop-arrow">&rarr;</span>
+                <div class="loop-step"><strong>3 LEARN</strong> Review matches, drop-offs &amp; feedback</div>
+                <span class="loop-arrow">&rarr;</span>
+                <div class="loop-step"><strong>4 IMPROVE</strong> Refine trust, timing and usability</div>
+              </div>
+
+              <div class="success-definition">
+                <strong>Success =</strong> Repeat use + Reliable matches + Positive rider feedback + Measurable savings.
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>EMPIRICAL VALIDATION</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 8: 07 Sustainable Growth -->
+          <div class="deck-slide" id="slide-8" data-index="8" role="tabpanel" aria-labelledby="deckTab8">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">07 / BUSINESS MODEL</span>
+                <span class="slide-meta-brand">Growth &amp; Monetization</span>
+              </div>
+              <h3 class="slide-headline">A lean model that can grow with trust</h3>
+              <p class="slide-desc">Start with a campus pilot; test willingness to pay before introducing fees.</p>
+
+              <div class="growth-split-grid">
+                <div class="growth-card revenue-card">
+                  <span class="growth-eyebrow">POTENTIAL REVENUE</span>
+                  <h4>Earn only when value is delivered.</h4>
+                  <ul class="growth-bullets">
+                    <li><strong>01 Small fee per confirmed booking:</strong> Micro-convenience fee only on successful ride activations.</li>
+                    <li><strong>02 Campus / transport partnerships:</strong> Preferred transit provider integrations with bus and cab syndicates.</li>
+                    <li><strong>03 Optional premium tools later:</strong> Priority notifications and scheduled recurring reservation tools.</li>
+                  </ul>
+                </div>
+
+                <div class="growth-card path-card">
+                  <span class="growth-eyebrow">GROWTH PATH</span>
+                  <h4>Three-Stage Scalability</h4>
+                  <div class="growth-path-steps">
+                    <div class="path-step">
+                      <span class="step-badge">1</span>
+                      <div><strong>CAMPUS:</strong> Prove repeat use and high retention at the pilot institution.</div>
+                    </div>
+                    <div class="path-step">
+                      <span class="step-badge">2</span>
+                      <div><strong>NEARBY TOWNS:</strong> Expand common return corridors and intercity transit hubs.</div>
+                    </div>
+                    <div class="path-step">
+                      <span class="step-badge">3</span>
+                      <div><strong>PARTNERS:</strong> Work with trusted institutional campus administrations and verified transport fleets.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="principle-banner">
+                <span>Principle: Safety, clarity and affordability come first.</span>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>SUSTAINABLE UNIT ECONOMICS</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 9: 08 Execution Plan -->
+          <div class="deck-slide" id="slide-9" data-index="9" role="tabpanel" aria-labelledby="deckTab9">
+            <div class="slide-content">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">08 / ROADMAP</span>
+                <span class="slide-meta-brand">Execution Plan</span>
+              </div>
+              <h3 class="slide-headline">Build small. Learn fast. Expand responsibly.</h3>
+              <p class="slide-desc">A phased roadmap keeps the first version focused and measurable.</p>
+
+              <div class="roadmap-grid-4">
+                <div class="phase-card">
+                  <span class="phase-tag">01 DISCOVER</span>
+                  <span class="phase-weeks">Weeks 1–2</span>
+                  <ul class="phase-items">
+                    <li>Student interviews</li>
+                    <li>Common-route mapping</li>
+                    <li>Trust &amp; safety requirements</li>
+                  </ul>
+                </div>
+                <div class="phase-card">
+                  <span class="phase-tag">02 BUILD</span>
+                  <span class="phase-weeks">Weeks 3–6</span>
+                  <ul class="phase-items">
+                    <li>Polish core ride flow</li>
+                    <li>Improve mobile usability</li>
+                    <li>Test with small volunteer group</li>
+                  </ul>
+                </div>
+                <div class="phase-card is-active-phase">
+                  <span class="phase-tag active">03 PILOT</span>
+                  <span class="phase-weeks">Weeks 7–10</span>
+                  <ul class="phase-items">
+                    <li>Run real trip trials</li>
+                    <li>Track match &amp; completion rates</li>
+                    <li>Collect qualitative feedback</li>
+                  </ul>
+                </div>
+                <div class="phase-card">
+                  <span class="phase-tag">04 EXPAND</span>
+                  <span class="phase-weeks">Next 3–6 months</span>
+                  <ul class="phase-items">
+                    <li>Add more routes</li>
+                    <li>Explore campus partnerships</li>
+                    <li>Scale only after proof</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="gate-strip">
+                <span class="gate-label">GATE TO SCALE:</span>
+                <span class="gate-rule">Evidence of safe, reliable matches—not just vanity downloads.</span>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>MEASURABLE MILESTONES</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 10: 09/10 The Vision & Prototype -->
+          <div class="deck-slide" id="slide-10" data-index="10" role="tabpanel" aria-labelledby="deckTab10">
+            <div class="slide-content slide-vision">
+              <div class="slide-top-meta">
+                <span class="slide-meta-num">09 / 10 • THE VISION</span>
+                <span class="slide-meta-brand">The Long-Term Goal</span>
+              </div>
+              <h3 class="slide-headline">Make every return journey feel more connected</h3>
+              
+              <div class="vision-quote-card">
+                <blockquote class="vision-quote">
+                  "DON'T TRAVEL ALONE WHEN YOU CAN TRAVEL TOGETHER."
+                </blockquote>
+                <p class="vision-sub">Return Ride Token helps students discover compatible rides, coordinate seats and make better use of every journey.</p>
+              </div>
+
+              <div class="vision-outcomes-strip">
+                <div class="outcome-box">
+                  <span class="outcome-title">LOWER COST</span>
+                  <span class="outcome-desc">Automated equal fare split</span>
+                </div>
+                <div class="outcome-box">
+                  <span class="outcome-title">LESS HASSLE</span>
+                  <span class="outcome-desc">Zero manual chat coordination</span>
+                </div>
+                <div class="outcome-box">
+                  <span class="outcome-title">STRONGER COMMUNITY</span>
+                  <span class="outcome-desc">Verified peer passenger trust</span>
+                </div>
+              </div>
+
+              <div class="prototype-action-card">
+                <div class="proto-info">
+                  <span class="proto-badge">LIVE PROTOTYPE</span>
+                  <h4>Experience the core concept</h4>
+                  <p>The interactive model is live directly on this website.</p>
+                </div>
+                <div class="proto-buttons">
+                  <a href="#how-it-works" class="btn btn-outline btn-sm">See Ride Steps</a>
+                  <a href="#join" class="btn btn-primary btn-sm">Join The Pilot</a>
+                </div>
+              </div>
+
+              <div class="slide-footer-bar">
+                <span>CAMPUS-FIRST MOBILITY</span>
+                <span>RETURN RIDE TOKEN • CREATE. JOIN. TRAVEL TOGETHER.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. FAQ -->
+    <section class="section section-alt" id="faq" aria-labelledby="faq-title">
+      <div class="container narrow">
+        <h2 id="faq-title" class="section-title">Questions, answered.</h2>
+        <div class="faq" id="faqList">
+          <div class="faq-item">
+            <h3><button type="button" class="faq-btn" id="faq-q1" aria-expanded="false" aria-controls="faq-a1">What is a Return Ride Token?<svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq-panel" id="faq-a1" role="region" aria-labelledby="faq-q1" hidden>
+              <p>It's a planned ride you post with a destination, departure time and number of seats. Other students tap Join My Ride, and the ride activates automatically once enough passengers join.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3><button type="button" class="faq-btn" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">What happens if not enough people join?<svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq-panel" id="faq-a2" role="region" aria-labelledby="faq-q2" hidden>
+              <p>The ride doesn't activate. You can cancel the token before activation, and the fare is only split once a ride is confirmed.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3><button type="button" class="faq-btn" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">When does the fare get split?<svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq-panel" id="faq-a3" role="region" aria-labelledby="faq-q3" hidden>
+              <p>When the ride activates. The agreed fare is divided among the confirmed passengers, so everyone sees their share before the trip.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3><button type="button" class="faq-btn" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">Who can see my ride?<svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq-panel" id="faq-a4" role="region" aria-labelledby="faq-q4" hidden>
+              <p>Nearby or eligible students. During the pilot, that means students at the participating campus.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3><button type="button" class="faq-btn" id="faq-q5" aria-expanded="false" aria-controls="faq-a5">Is it free?<svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq-panel" id="faq-a5" role="region" aria-labelledby="faq-q5" hidden>
+              <p>The pilot is free.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <h3><button type="button" class="faq-btn" id="faq-q6" aria-expanded="false" aria-controls="faq-a6">Which colleges are supported?<svg class="chev" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h3>
+            <div class="faq-panel" id="faq-a6" role="region" aria-labelledby="faq-q6" hidden>
+              <p>We're starting with one campus. Join the list to be first when yours opens.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Final CTA -->
+    <section class="section" id="join" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta">
+          <h2 id="cta-title" class="cta-title">Your ride home is <span class="mark">one tap</span> away.</h2>
+          <p class="cta-sub">Join the pilot list and we'll tell you when tokens open at your campus.</p>
+
+          <form class="cta-form js-lead-form" data-source="final" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="cta-email" class="label">College email</label>
+                <input type="email" id="cta-email" name="email" class="input" placeholder="you@college.edu" autocomplete="email" required aria-describedby="cta-email-error">
+                <p class="field-error" id="cta-email-error"></p>
+              </div>
+              <div class="field">
+                <label for="cta-college" class="label">College name</label>
+                <input type="text" id="cta-college" name="college" class="input" autocomplete="organization" required aria-describedby="cta-college-error">
+                <p class="field-error" id="cta-college-error"></p>
+              </div>
+              <div class="field">
+                <label for="cta-intent" class="label">I want to</label>
+                <div class="select-wrap">
+                  <select id="cta-intent" name="intent" class="input">
+                    <option value="ride">Ride</option>
+                    <option value="offer">Offer seats</option>
+                    <option value="both">Both</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label for="cta-website">Leave this empty</label>
+              <input type="text" id="cta-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Request early access</button>
+            <p class="form-hint">Both fields are required. We only use your email to tell you when the pilot opens.</p>
+            <p class="form-status" role="alert"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 12. Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <a href="#top" class="wordmark wordmark-light js-brand">ReturnRide</a>
+        <div class="footer-cols">
+          <div>
+            <h2 class="footer-title">Product</h2>
+            <ul>
+              <li><a href="#how-it-works">How it works</a></li>
+              <li><a href="#pitch-deck">Pitch deck</a></li>
+              <li><a href="#safety">Safety</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 class="footer-title">Company</h2>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="mailto:hello@returnride.app" class="js-email-href">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2 class="footer-title">Legal</h2>
+            <ul>
+              <li><button type="button" class="link-btn" data-legal="privacy">Privacy</button></li>
+              <li><button type="button" class="link-btn" data-legal="terms">Terms</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span class="js-year">2026</span> <span class="js-brand">ReturnRide</span>. A student project.</p>
+        <p><a href="mailto:hello@returnride.app" class="js-email-href js-email-text">hello@returnride.app</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <dialog class="dialog" id="legalDialog" aria-labelledby="legalTitle">
+    <div class="dialog-head">
+      <h2 id="legalTitle">Privacy</h2>
+      <button type="button" class="dialog-close" id="legalClose" aria-label="Close">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body" id="legalBody"></div>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
