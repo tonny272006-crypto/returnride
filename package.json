@@ -4,6 +4,7 @@
   "private": true,
   "description": "ReturnRide (Return Ride Token) landing page. Zero-dependency static site.",
   "scripts": {
+    "build": "mkdir -p dist && cp index.html styles.css script.js config.js dist/",
     "start": "node server.js",
     "test": "node --test tests/helpers.test.js"
   },
